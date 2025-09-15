@@ -14,7 +14,7 @@
 
 - **前端框架**: React 18 + TypeScript
 - **构建工具**: Webpack 5
-- **QR码生成**: qrcode.js
+- **QR码生成**: qrode.js
 - **样式**: CSS3 + Flexbox
 - **开发环境**: Chrome Extension Manifest V3
 

@@ -47,9 +47,21 @@ const App: React.FC = () => {
       });
       
       setQRCodeDataURL(qrCode);
+      
+      // 使用全局toast方法显示成功消息
+      (window as any).toast.success('二维码生成成功！', {
+        duration: 2000,
+        title: '生成成功'
+      });
     } catch (error) {
-      console.error('Error generating QR code:', error);
-      setError(error instanceof Error ? error.message : 'Unknown error occurred');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      setError(errorMessage);
+      
+      // 使用全局toast方法显示错误消息
+      (window as any).toast.error(`二维码生成失败: ${errorMessage}`, {
+        duration: 4000,
+        title: '生成失败'
+      });
     } finally {
       setIsLoading(false);
     }

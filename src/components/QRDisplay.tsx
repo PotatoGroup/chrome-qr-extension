@@ -27,17 +27,24 @@ const QRDisplay: React.FC<QRDisplayProps> = ({
     try {
       const targetUrl = urlToCopy || qrCodeUrl || url;
       await navigator.clipboard.writeText(targetUrl);
-      // You could add a toast notification here
-      console.log('URL copied to clipboard:', targetUrl);
+      // 使用全局toast方法显示成功消息
+      (window as any).toast.success(`${targetUrl}已复制到剪贴板`, { 
+        duration: 2000,
+        title: '复制成功'
+      });
     } catch (error) {
-      console.error('Failed to copy URL:', error);
+      // 显示错误消息
+      (window as any).toast.error(`复制失败: ${error instanceof Error ? error.message : '未知错误'}`, {
+        duration: 3000,
+        title: '复制失败'
+      });
     }
   };
 
   // 获取网络状态图标
   const getNetworkStatusIcon = () => {
     if (!networkInfo) return '🔍';
-    
+
     switch (networkInfo.networkStatus) {
       case 'connected':
         return networkInfo.isLocalhost ? '⚠️' : '✅';
@@ -51,15 +58,15 @@ const QRDisplay: React.FC<QRDisplayProps> = ({
   // 获取网络状态文本
   const getNetworkStatusText = () => {
     if (!networkInfo) return 'Checking network...';
-    
+
     if (networkInfo.networkStatus === 'disconnected') {
       return 'Network disconnected';
     }
-    
+
     if (networkInfo.isLocalhost) {
       return `Localhost detected (Local IP: ${networkInfo.localIP})`;
     }
-    
+
     return 'Network ready';
   };
 
@@ -68,7 +75,7 @@ const QRDisplay: React.FC<QRDisplayProps> = ({
       <div className="qr-display__header">
         <h2 className="qr-display__title">Mobile Preview QR Code</h2>
       </div>
-      
+
       <div className="qr-display__content">
         {isLoading ? (
           <div className="qr-display__loading">
@@ -78,16 +85,16 @@ const QRDisplay: React.FC<QRDisplayProps> = ({
         ) : (
           <>
             <div className="qr-display__qr-container">
-              <img 
-                src={qrCodeDataURL} 
-                alt="QR Code" 
+              <img
+                src={qrCodeDataURL}
+                alt="QR Code"
                 className="qr-display__qr-image"
               />
             </div>
-            
+
             <div className="qr-display__info">
               <h3 className="qr-display__page-title">{title}</h3>
-              
+
               {/* 网络状态指示器 */}
               <div className="qr-display__network-status">
                 <span className="network-status-icon">{getNetworkStatusIcon()}</span>
@@ -106,14 +113,14 @@ const QRDisplay: React.FC<QRDisplayProps> = ({
               {/* 原始URL */}
               <div className="qr-display__url-container">
                 <label className="qr-display__url-label">Original URL:</label>
-                <input 
-                  type="text" 
-                  value={url} 
-                  readOnly 
+                <input
+                  type="text"
+                  value={url}
+                  readOnly
                   className="qr-display__url-input"
                   onClick={(e) => e.currentTarget.select()}
                 />
-                <button 
+                <button
                   onClick={() => copyToClipboard(url)}
                   className="qr-display__copy-button"
                   title="Copy Original URL"
@@ -126,14 +133,14 @@ const QRDisplay: React.FC<QRDisplayProps> = ({
               {qrCodeUrl && qrCodeUrl !== url && (
                 <div className="qr-display__url-container qr-display__qr-url-container">
                   <label className="qr-display__url-label">QR Code URL (Mobile Access):</label>
-                  <input 
-                    type="text" 
-                    value={qrCodeUrl} 
-                    readOnly 
+                  <input
+                    type="text"
+                    value={qrCodeUrl}
+                    readOnly
                     className="qr-display__url-input qr-display__qr-url-input"
                     onClick={(e) => e.currentTarget.select()}
                   />
-                  <button 
+                  <button
                     onClick={() => copyToClipboard(qrCodeUrl)}
                     className="qr-display__copy-button"
                     title="Copy QR Code URL"
@@ -143,16 +150,16 @@ const QRDisplay: React.FC<QRDisplayProps> = ({
                 </div>
               )}
             </div>
-            
+
             <div className="qr-display__actions">
-              <button 
+              <button
                 onClick={onRegenerate}
                 className="qr-display__refresh-button"
               >
-                🔄 Refresh QR Code
+                Refresh QR Code
               </button>
             </div>
-            
+
             {/* 网络建议 */}
             {showNetworkInfo && networkSuggestions.length > 0 && (
               <div className="qr-display__network-suggestions">
@@ -171,7 +178,7 @@ const QRDisplay: React.FC<QRDisplayProps> = ({
                       {networkInfo.alternativeUrls.slice(1).map((altUrl, index) => (
                         <li key={index} className="alternative-url">
                           <code>{altUrl}</code>
-                          <button 
+                          <button
                             onClick={() => copyToClipboard(altUrl)}
                             className="qr-display__copy-button-small"
                             title="Copy Alternative URL"
