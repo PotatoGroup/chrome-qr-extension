@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "H5 Mobile Preview QR Generator",
+  "version": "1.0.0",
+  "description": "Generate QR codes for current page to preview on mobile devices while developing H5 component libraries",
+  "permissions": [
+    "activeTab",
+    "tabs"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Generate QR Code"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}
