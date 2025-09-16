@@ -67,8 +67,31 @@ const App: React.FC = () => {
     }
   };
 
+  // 初始化时生成二维码
   useEffect(() => {
     generateQR();
+  }, []);
+
+  // 监听来自background script的消息
+  useEffect(() => {
+    const messageListener = (message: any, sender: any, sendResponse: any) => {
+      // 检查是否是来自扩展的消息
+      if (message && (message.type === 'TAB_CHANGED' || message.type === 'TAB_UPDATED')) {
+        console.log('Received tab change/update message:', message);
+        // 延迟一点执行，确保标签页切换完成
+        setTimeout(() => {
+          generateQR();
+        }, 100);
+      }
+    };
+
+    // 添加消息监听器
+    chrome.runtime.onMessage.addListener(messageListener);
+
+    // 清理监听器
+    return () => {
+      chrome.runtime.onMessage.removeListener(messageListener);
+    };
   }, []);
 
   if (error) {

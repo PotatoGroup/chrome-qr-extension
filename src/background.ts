@@ -1,13 +1,43 @@
 // 监听扩展图标点击事件，打开侧边面板
 chrome.action.onClicked.addListener(async (tab) => {
   try {
-    // 设置侧边面板宽度为300px
     if (tab.windowId) {
       // 打开侧边面板
       await (chrome.sidePanel as any).open({ windowId: tab.windowId });
     }
   } catch (error) {
     console.error('Error opening side panel:', error);
+  }
+});
+
+// 监听标签页切换事件
+chrome.tabs.onActivated.addListener(async (activeInfo) => {
+  try {
+    // 向侧边面板发送刷新消息
+    await chrome.runtime.sendMessage({
+      type: 'TAB_CHANGED',
+      tabId: activeInfo.tabId,
+      windowId: activeInfo.windowId
+    });
+  } catch (error) {
+    // 如果侧边面板未打开或无法发送消息，静默处理
+    console.log('Side panel not active or error sending message:', error);
+  }
+});
+
+// 监听标签页URL更新事件
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  // 只在URL变化且页面加载完成时触发
+  if (changeInfo.status === 'complete' && changeInfo.url) {
+    try {
+      await chrome.runtime.sendMessage({
+        type: 'TAB_UPDATED',
+        tabId: tabId,
+        url: changeInfo.url
+      });
+    } catch (error) {
+      console.log('Side panel not active or error sending message:', error);
+    }
   }
 });
 
