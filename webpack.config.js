@@ -4,7 +4,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
-    popup: './src/popup.tsx'
+    popup: './src/popup.tsx',
+    sidepanel: './src/sidepanel.tsx',
+    background: './src/background.ts'
   },
   output: {
     path: path.resolve(__dirname, 'chrome-qr-extension'),
@@ -37,7 +39,7 @@ module.exports = {
           from: 'public',
           to: '.',
           globOptions: {
-            ignore: ['**/popup.html'],
+            ignore: ['**/popup.html', '**/sidepanel.html'],
           },
         },
       ],
@@ -46,6 +48,11 @@ module.exports = {
       template: 'public/popup.html',
       filename: 'popup.html',
       chunks: ['popup'],
+    }),
+    new HtmlWebpackPlugin({
+      template: 'public/sidepanel.html',
+      filename: 'sidepanel.html',
+      chunks: ['sidepanel'],
     }),
   ],
   optimization: {
