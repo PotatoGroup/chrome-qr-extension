@@ -19,7 +19,8 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
     await chrome.runtime.sendMessage({
       type: 'TAB_CHANGED',
       tabId: activeInfo.tabId,
-      windowId: activeInfo.windowId
+      windowId: activeInfo.windowId,
+      toast: false
     });
   } catch (error) {
     // 如果侧边面板未打开或无法发送消息，静默处理
@@ -35,7 +36,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       await chrome.runtime.sendMessage({
         type: 'TAB_UPDATED',
         tabId: tabId,
-        url: changeInfo.url
+        url: changeInfo.url,
+        toast: false
       });
     } catch (error) {
       console.log('Side panel not active or error sending message:', error);

@@ -13,7 +13,7 @@ const App: React.FC = () => {
   const [networkInfo, setNetworkInfo] = useState<NetworkInfo | null>(null);
   const [networkSuggestions, setNetworkSuggestions] = useState<string[]>([]);
 
-  const generateQR = async () => {
+  const generateQR = async (toast: boolean = true) => {
     try {
       setIsLoading(true);
       setError('');
@@ -49,10 +49,12 @@ const App: React.FC = () => {
       setQRCodeDataURL(qrCode);
       
       // 使用全局toast方法显示成功消息
-      (window as any).toast.success('二维码生成成功！', {
-        duration: 2000,
-        title: '生成成功'
-      });
+      if (toast) {
+        (window as any).toast.success('二维码生成成功！', {
+          duration: 2000,
+          title: '生成成功'
+        });
+      }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       setError(errorMessage);
@@ -80,7 +82,7 @@ const App: React.FC = () => {
         console.log('Received tab change/update message:', message);
         // 延迟一点执行，确保标签页切换完成
         setTimeout(() => {
-          generateQR();
+          generateQR(message.toast);
         }, 100);
       }
     };
@@ -100,7 +102,7 @@ const App: React.FC = () => {
         <div className="error-container">
           <h2>Error</h2>
           <p>{error}</p>
-          <button onClick={generateQR} className="retry-button">
+          <button onClick={() => generateQR()} className="retry-button">
             Try Again
           </button>
         </div>
