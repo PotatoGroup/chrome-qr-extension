@@ -73,7 +73,7 @@ const QRDisplay: React.FC<QRDisplayProps> = ({
   return (
     <div className="qr-display">
       <div className="qr-display__header">
-        <h2 className="qr-display__title">Mobile Preview QR Code</h2>
+        <h3 className="qr-display__title">{title}</h3>
       </div>
 
       <div className="qr-display__content">
@@ -93,8 +93,6 @@ const QRDisplay: React.FC<QRDisplayProps> = ({
             </div>
 
             <div className="qr-display__info">
-              <h3 className="qr-display__page-title">{title}</h3>
-
               {/* 网络状态指示器 */}
               <div className="qr-display__network-status">
                 <span className="network-status-icon">{getNetworkStatusIcon()}</span>

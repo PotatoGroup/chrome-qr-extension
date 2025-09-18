@@ -1,11 +1,9 @@
-let isSidePanelOpen = false;
 // 监听扩展图标点击事件，打开侧边面板
 chrome.action.onClicked.addListener(async (tab) => {
   try {
     if (tab.windowId) {
       // 打开侧边面板
       await (chrome.sidePanel as any).open({ windowId: tab.windowId });
-      isSidePanelOpen = true;
     }
   } catch (error) {
     console.error('Error opening side panel:', error);
@@ -15,7 +13,6 @@ chrome.action.onClicked.addListener(async (tab) => {
 // 记录侧边面板的激活状态
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
   try {
-    if(!isSidePanelOpen) return;
     await chrome.runtime.sendMessage({
       type: 'TAB_CHANGED',
       tabId: activeInfo.tabId,
@@ -31,7 +28,7 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
 // 监听标签页URL更新事件
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   // 只在URL变化且页面加载完成时触发
-  if (changeInfo.status === 'complete' && changeInfo.url && isSidePanelOpen) {
+  if (changeInfo.status === 'complete' && changeInfo.url) {
     try {
       await chrome.runtime.sendMessage({
         type: 'TAB_UPDATED',
