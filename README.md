@@ -1,6 +1,6 @@
 # H5 Mobile Preview QR Generator
 
-<h2>一个基于React + TypeScript的Chrome浏览器插件，用于在开发H5移动端组件库时生成当前页面的二维码，方便在移动设备上扫码预览页面内容，查看实时UI效果</h2>
+<h2 style="text-align: center;">很方便的把页面内容生成二维码，扫码即可实时查看的插件</h2>
 
 <img src="./snapeshot.png">
 
