@@ -8,8 +8,10 @@
     "tabs",
     "storage",
     "sidePanel",
-    "notifications"
+    "notifications",
+    "webRequest"
   ],
+  "host_permissions": ["<all_urls>"],
   "action": {
     "default_title": "Generate QR Code",
     "default_icon": {

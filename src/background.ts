@@ -1,3 +1,4 @@
+import { getDomain } from './utils/network';
 // 监听扩展图标点击事件，打开侧边面板
 chrome.action.onClicked.addListener(async (tab) => {
   try {
@@ -46,3 +47,20 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Extension installed, side panel ready');
 });
+
+//监听ws热更新
+chrome.webRequest.onCompleted.addListener((detail) => {
+  const { tabId, initiator, url } = detail;
+  // 判断 initiator 和 url 的域名是否相同，相同则更新二维码
+  const initiatorDomain = getDomain(initiator);
+  const urlDomain = getDomain(url);
+  if (initiatorDomain !== urlDomain) {
+    return;
+  }
+  // 发送消息更新二维码
+  chrome.runtime.sendMessage({
+    type: 'TAB_UPDATED',
+    tabId,
+    toast: false
+  });
+}, { urls: ['<all_urls>'], types: ['websocket'] });

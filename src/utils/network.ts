@@ -22,7 +22,7 @@ export const getLocalIP = (): Promise<string> => {
       if (event.candidate) {
         const candidate = event.candidate.candidate;
         const ipMatch = candidate.match(/(\d+\.\d+\.\d+\.\d+)/);
-        
+
         if (ipMatch && ipMatch[1] !== '127.0.0.1') {
           localIP = ipMatch[1];
           rtc.close();
@@ -54,11 +54,11 @@ export const isLocalhostUrl = (url: string): boolean => {
   try {
     const urlObj = new URL(url);
     const hostname = urlObj.hostname.toLowerCase();
-    
-    return hostname === 'localhost' || 
-           hostname === '127.0.0.1' || 
-           hostname === '::1' ||
-           hostname.endsWith('.localhost');
+
+    return hostname === 'localhost' ||
+      hostname === '127.0.0.1' ||
+      hostname === '::1' ||
+      hostname.endsWith('.localhost');
   } catch {
     return false;
   }
@@ -93,11 +93,11 @@ export const generateAlternativeUrls = async (originalUrl: string): Promise<stri
     try {
       const localIP = await getLocalIP();
       const urlObj = new URL(originalUrl);
-      
+
       // 添加局域网IP版本
       urlObj.hostname = localIP;
       alternatives.push(urlObj.toString());
-      
+
       // 如果是HTTP，也添加HTTPS版本
       if (urlObj.protocol === 'http:') {
         urlObj.protocol = 'https:';
@@ -141,7 +141,7 @@ export const getNetworkInfo = async (url: string): Promise<NetworkInfo> => {
   const isLocalhost = isLocalhostUrl(url);
   const networkStatus = checkNetworkStatus();
   const alternativeUrls = await generateAlternativeUrls(url);
-  
+
   let localIP = '';
   try {
     localIP = await getLocalIP();
@@ -169,11 +169,11 @@ export const getNetworkAccessSuggestions = (networkInfo: NetworkInfo): string[] 
 
   if (networkInfo.isLocalhost) {
     suggestions.push('检测到localhost地址，手机可能无法直接访问');
-    
+
     if (networkInfo.alternativeUrls.length > 1) {
       suggestions.push(`尝试使用局域网IP访问：${networkInfo.localIP}`);
     }
-    
+
     suggestions.push('确保电脑和手机连接到同一WiFi网络');
     suggestions.push('检查防火墙设置，允许局域网访问');
   }
@@ -183,4 +183,13 @@ export const getNetworkAccessSuggestions = (networkInfo: NetworkInfo): string[] 
   }
 
   return suggestions;
+};
+
+export const getDomain = (input: string | undefined) => {
+  if (!input) return;
+  try {
+    return new URL(input).hostname;
+  } catch {
+    return;
+  }
 };
