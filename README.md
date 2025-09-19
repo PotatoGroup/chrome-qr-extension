@@ -1,6 +1,4 @@
-# H5 Mobile Preview QR Generator
-
-<h2 style="text-align: center;">很方便的把页面内容生成二维码，扫码即可实时查看的插件</h2>
+# 很方便的把页面内容生成二维码，扫码即可实时查看的插件
 
 <img src="./snapeshot.png">
 
